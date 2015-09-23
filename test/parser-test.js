@@ -105,4 +105,37 @@ describe('Parser', function() {
       index: true
     });
   });
+
+  it('should parse literal', function() {
+    test(function() {/*
+      i64 mul() {
+        return i64.const(1);
+      }
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'Function',
+          localCount: 0,
+          name: { type: 'Identifier', name: 'mul' },
+          params: [],
+          result: { type: 'Type', name: 'i64' },
+          body: [
+            {
+              type: 'ReturnStatement',
+              argument: {
+                type: 'Builtin',
+                result: { type: 'Type', name: 'i64' },
+                method: 'const',
+                arguments: [ {
+                  type: 'Literal',
+                  value: 1
+                } ]
+              }
+            }
+          ]
+        }
+      ]
+    });
+  });
 });

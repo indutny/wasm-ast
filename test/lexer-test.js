@@ -101,4 +101,45 @@ describe('Lexer', function() {
 
     assert(lexer.end());
   });
+
+  describe('literals', function() {
+    it('should handle int', function() {
+      test('123', [ { type: 'Literal', value: '123' } ]);
+    });
+
+    it('should handle -int', function() {
+      test('-123', [ { type: 'Literal', value: '-123' } ]);
+    });
+
+    it('should handle +int', function() {
+      test('+123', [ { type: 'Literal', value: '+123' } ]);
+    });
+
+    it('should handle 1.', function() {
+      test('1.', [ { type: 'Literal', value: '1.' } ]);
+    });
+
+    it('should handle 123.456', function() {
+      test('123.456', [ { type: 'Literal', value: '123.456' } ]);
+    });
+
+    it('should handle 123.456e1', function() {
+      test('123.456e1', [ { type: 'Literal', value: '123.456e1' } ]);
+    });
+
+    it('should handle 123.456e+1', function() {
+      test('123.456e+1', [ { type: 'Literal', value: '123.456e+1' } ]);
+    });
+
+    it('should handle 123.456e-1', function() {
+      test('123.456e-1', [ { type: 'Literal', value: '123.456e-1' } ]);
+    });
+
+    it('should handle 123)', function() {
+      test('123)', [
+        { type: 'Literal', value: '123' },
+        { type: 'Punctuation', value: ')' }
+      ]);
+    });
+  });
 });
