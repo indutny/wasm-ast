@@ -1,0 +1,29 @@
+{
+  "name": "wasm-ast",
+  "version": "1.0.0",
+  "description": "WebAssembly AST parser",
+  "main": "lib/ast.js",
+  "scripts": {
+    "test": "mocha --reporter=spec test/*-test.js && jscs lib/*.js lib/**/*.js test/*.js && jshint lib/*.js lib/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/indutny/wasm-ast.git"
+  },
+  "keywords": [
+    "WebAssembly",
+    "AST",
+    "parser"
+  ],
+  "author": "Fedor Indutny <fedor@indutny.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/indutny/wasm-ast/issues"
+  },
+  "homepage": "https://github.com/indutny/wasm-ast#readme",
+  "devDependencies": {
+    "jscs": "^2.1.1",
+    "jshint": "^2.8.0",
+    "mocha": "^2.3.3"
+  }
+}
