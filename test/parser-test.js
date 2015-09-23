@@ -5,10 +5,10 @@ var fixtures = require('./fixtures');
 
 var wasmAST = require('../');
 
-function test(source, expected) {
+function test(source, expected, options) {
   source = fixtures.fn2str(source);
 
-  var ast = wasmAST.parse(source);
+  var ast = wasmAST.parse(source, options);
   assert.deepEqual(ast, expected);
 }
 
@@ -23,6 +23,7 @@ describe('Parser', function() {
       body: [
         {
           type: 'Function',
+          localCount: 0,
           name: { type: 'Identifier', name: 'mul' },
           params: [ {
             type: 'Parameter',
@@ -57,6 +58,51 @@ describe('Parser', function() {
           ]
         }
       ]
+    });
+  });
+
+  it('should index params', function() {
+    test(function() {/*
+      i64 second(i32 a, i32 b, i32 c) {
+        return b;
+      }
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'Function',
+          localCount: 0,
+          name: { type: 'FunctionRef', index: 0 },
+          params: [
+            {
+              type: 'Parameter',
+              valueType: { type: 'Type', name: 'i32' },
+              name: { type: 'Param', index: 0 }
+            },
+            {
+              type: 'Parameter',
+              valueType: { type: 'Type', name: 'i32' },
+              name: { type: 'Param', index: 1 }
+            },
+            {
+              type: 'Parameter',
+              valueType: { type: 'Type', name: 'i32' },
+              name: { type: 'Param', index: 2 }
+            }
+          ],
+          result: { type: 'Type', name: 'i64' },
+          body: [
+            {
+              type: 'ReturnStatement',
+              argument: {
+                type: 'Param', index: 1
+              }
+            }
+          ]
+        }
+      ]
+    }, {
+      index: true
     });
   });
 });
