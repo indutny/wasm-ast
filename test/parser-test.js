@@ -39,16 +39,16 @@ describe('Parser', function() {
             {
               type: 'ReturnStatement',
               argument: {
-                type: 'TypeCall',
+                type: 'Builtin',
                 result: { type: 'Type', name: 'i64' },
                 method: 'mul',
                 arguments: [ {
-                  type: 'TypeCall',
+                  type: 'Builtin',
                   result: { type: 'Type', name: 'i64' },
                   method: 'extend_u',
                   arguments: [ { type: 'Identifier', name: 'a' } ]
                 }, {
-                  type: 'TypeCall',
+                  type: 'Builtin',
                   result: { type: 'Type', name: 'i64' },
                   method: 'extend_u',
                   arguments: [ { type: 'Identifier', name: 'b' } ]
