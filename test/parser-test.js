@@ -26,12 +26,12 @@ describe('Parser', function() {
           localCount: 0,
           name: { type: 'Identifier', name: 'mul' },
           params: [ {
-            type: 'Parameter',
-            valueType: { type: 'Type', name: 'i32' },
+            type: 'Param',
+            result: { type: 'Type', name: 'i32' },
             name: { type: 'Identifier', name: 'a' }
           }, {
-            type: 'Parameter',
-            valueType: { type: 'Type', name: 'i32' },
+            type: 'Param',
+            result: { type: 'Type', name: 'i32' },
             name: { type: 'Identifier', name: 'b' }
           } ],
           result: { type: 'Type', name: 'i64' },
@@ -75,18 +75,18 @@ describe('Parser', function() {
           name: { type: 'FunctionRef', index: 0 },
           params: [
             {
-              type: 'Parameter',
-              valueType: { type: 'Type', name: 'i32' },
+              type: 'Param',
+              result: { type: 'Type', name: 'i32' },
               name: { type: 'Param', index: 0 }
             },
             {
-              type: 'Parameter',
-              valueType: { type: 'Type', name: 'i32' },
+              type: 'Param',
+              result: { type: 'Type', name: 'i32' },
               name: { type: 'Param', index: 1 }
             },
             {
-              type: 'Parameter',
-              valueType: { type: 'Type', name: 'i32' },
+              type: 'Param',
+              result: { type: 'Type', name: 'i32' },
               name: { type: 'Param', index: 2 }
             }
           ],
