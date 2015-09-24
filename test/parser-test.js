@@ -138,4 +138,60 @@ describe('Parser', function() {
       ]
     });
   });
+
+  it('should parse seq-expr', function() {
+    test(function() {/*
+      i64 mul() {
+        return (i64.const(1), i64.const(2), i64.const(3));
+      }
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'Function',
+          localCount: 0,
+          name: { type: 'Identifier', name: 'mul' },
+          params: [],
+          result: { type: 'Type', name: 'i64' },
+          body: [
+            {
+              type: 'ReturnStatement',
+              argument: {
+                type: 'SequenceExpression',
+                expressions: [
+                  {
+                    type: 'Builtin',
+                    result: { type: 'Type', name: 'i64' },
+                    method: 'const',
+                    arguments: [ {
+                      type: 'Literal',
+                      value: 1
+                    } ]
+                  },
+                  {
+                    type: 'Builtin',
+                    result: { type: 'Type', name: 'i64' },
+                    method: 'const',
+                    arguments: [ {
+                      type: 'Literal',
+                      value: 2
+                    } ]
+                  },
+                  {
+                    type: 'Builtin',
+                    result: { type: 'Type', name: 'i64' },
+                    method: 'const',
+                    arguments: [ {
+                      type: 'Literal',
+                      value: 3
+                    } ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    });
+  });
 });
