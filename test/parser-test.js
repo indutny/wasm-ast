@@ -139,7 +139,7 @@ describe('Parser', function() {
     });
   });
 
-  it('should parse seq-expr', function() {
+  it('should parse SequenceExpression', function() {
     test(function() {/*
       i64 mul() {
         return (i64.const(1), i64.const(2), i64.const(3));
@@ -188,6 +188,60 @@ describe('Parser', function() {
                   }
                 ]
               }
+            }
+          ]
+        }
+      ]
+    });
+  });
+
+  it('should parse VariableDeclaration', function() {
+    test(function() {/*
+      void mul() {
+        i64 a = i64.const(1);
+        i64 b;
+      }
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'Function',
+          localCount: 0,
+          name: { type: 'Identifier', name: 'mul' },
+          params: [],
+          result: { type: 'Type', name: 'void' },
+          body: [
+            {
+              id: {
+                name: 'a',
+                type: 'Identifier'
+              },
+              result: {
+                type: 'Type',
+                name: 'i64'
+              },
+              init: {
+                type: 'Builtin',
+                result: { type: 'Type', name: 'i64' },
+                method: 'const',
+                arguments: [ {
+                  type: 'Literal',
+                  value: 1
+                } ]
+              },
+              type: 'VariableDeclaration'
+            },
+            {
+              id: {
+                name: 'b',
+                type: 'Identifier'
+              },
+              result: {
+                type: 'Type',
+                name: 'i64'
+              },
+              init: null,
+              type: 'VariableDeclaration'
             }
           ]
         }
