@@ -248,4 +248,39 @@ describe('Parser', function() {
       ]
     });
   });
+
+  it('should parse AssignmentExpression', function() {
+    test(function() {/*
+      void mul() {
+        a = b = c;
+      }
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'Function',
+          localCount: 0,
+          name: { type: 'Identifier', name: 'mul' },
+          params: [],
+          result: { type: 'Type', name: 'void' },
+          body: [
+            {
+              type: 'ExpressionStatement',
+              expression: {
+                type: 'AssignmentExpression',
+                operator: '=',
+                left: { type: 'Identifier', name: 'a' },
+                right: {
+                  type: 'AssignmentExpression',
+                  operator: '=',
+                  left: { type: 'Identifier', name: 'b' },
+                  right: { type: 'Identifier', name: 'c' }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    });
+  });
 });
