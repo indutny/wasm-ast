@@ -283,4 +283,29 @@ describe('Parser', function() {
       ]
     });
   });
+
+  it('should parse empty ReturnStatement', function() {
+    test(function() {/*
+      void mul() {
+        return;
+      }
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'Function',
+          localCount: 0,
+          name: { type: 'Identifier', name: 'mul' },
+          params: [],
+          result: { type: 'Type', name: 'void' },
+          body: [
+            {
+              type: 'ReturnStatement',
+              argument: null
+            }
+          ]
+        }
+      ]
+    });
+  });
 });
