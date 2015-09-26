@@ -16,6 +16,17 @@ function test(source, expected) {
 }
 
 describe('Lexer', function() {
+  it('should handle comments', function() {
+    test(function() {/*
+      test1
+      // comment
+      test2
+    */}, [
+      { type: 'Identifier', value: 'test1' },
+      { type: 'Identifier', value: 'test2' }
+    ]);
+  });
+
   it('should handle empty function', function() {
     test(function() {/*
       void name() {

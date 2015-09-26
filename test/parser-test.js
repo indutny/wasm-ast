@@ -357,4 +357,81 @@ describe('Parser', function() {
       ]
     });
   });
+
+  it('should parse forever loop', function() {
+    test(function() {/*
+      i64 mul() {
+        i64 t = i64.const(1);
+        forever {
+          t = i64.add(t, t);
+        }
+
+        // Not going to happen
+        return t;
+      }
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'Function',
+          localCount: 0,
+          name: { type: 'Identifier', name: 'mul' },
+          params: [ ],
+          result: { type: 'Type', name: 'i64' },
+          body: [
+            {
+              type: 'VariableDeclaration',
+              id: {
+                name: 't',
+                type: 'Identifier'
+              },
+              result: {
+                type: 'Type',
+                name: 'i64'
+              },
+              init: {
+                type: 'Builtin',
+                result: { type: 'Type', name: 'i64' },
+                method: 'const',
+                arguments: [ {
+                  type: 'Literal',
+                  value: 1
+                } ]
+              }
+            },
+            {
+              type: 'ForeverStatement',
+              body: {
+                type: 'BlockStatement',
+                body: [
+                  {
+                    type: 'ExpressionStatement',
+                    expression: {
+                      type: 'AssignmentExpression',
+                      operator: '=',
+                      left: { type: 'Identifier', name: 't' },
+                      right: {
+                        type: 'Builtin',
+                        result: { type: 'Type', name: 'i64' },
+                        method: 'add',
+                        arguments: [ {
+                          type: 'Identifier', name: 't'
+                        }, {
+                          type: 'Identifier', name: 't'
+                        } ]
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              type: 'ReturnStatement',
+              argument: { type: 'Identifier', name: 't' }
+            }
+          ]
+        }
+      ]
+    });
+  });
 });
