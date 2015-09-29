@@ -434,4 +434,48 @@ describe('Parser', function() {
       ]
     });
   });
+
+  it('should parse forever loop', function() {
+    test(function() {/*
+      void mul() {
+        forever {
+          continue;
+          break;
+        }
+      }
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'Function',
+          result: {
+            type: 'Type',
+            name: 'void'
+          },
+          name: {
+            type: 'Identifier',
+            name: 'mul'
+          },
+          params: [],
+          body: [
+            {
+              type: 'ForeverStatement',
+              body: {
+                type: 'BlockStatement',
+                body: [
+                  {
+                    type: 'ContinueStatement'
+                  },
+                  {
+                    type: 'BreakStatement'
+                  }
+                ]
+              }
+            }
+          ],
+          localCount: 0
+        }
+      ]
+    });
+  });
 });
