@@ -358,6 +358,52 @@ describe('Parser', function() {
     });
   });
 
+  it('should parse blockless IfStatement', function() {
+    test(function() {/*
+      i64 mul(i64 a) {
+        if (a)
+          return a;
+        else
+          return i64.const(1);
+      }
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'Function',
+          localCount: 0,
+          name: { type: 'Identifier', name: 'mul' },
+          params: [ {
+            type: 'ParamDeclaration',
+            result: { type: 'Type', name: 'i64' },
+            name: { type: 'Identifier', name: 'a' }
+          } ],
+          result: { type: 'Type', name: 'i64' },
+          body: [ {
+            type: 'IfStatement',
+            test: { type: 'Identifier', name: 'a' },
+            consequent: {
+              type: 'ReturnStatement',
+              argument: { type: 'Identifier', name: 'a' }
+            },
+            alternate: {
+              type: 'ReturnStatement',
+              argument: {
+                type: 'Builtin',
+                result: { type: 'Type', name: 'i64' },
+                method: 'const',
+                arguments: [ {
+                  type: 'Literal',
+                  value: 1
+                } ]
+              }
+            }
+          } ]
+        }
+      ]
+    });
+  });
+
   it('should parse forever loop', function() {
     test(function() {/*
       i64 mul() {
@@ -435,7 +481,7 @@ describe('Parser', function() {
     });
   });
 
-  it('should parse forever loop', function() {
+  it('should parse forever loop with break/continue', function() {
     test(function() {/*
       void mul() {
         forever {
