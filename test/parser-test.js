@@ -12,6 +12,13 @@ function test(source, expected, options) {
   assert.deepEqual(ast, expected);
 }
 
+function testBody(source, expected, options) {
+  source = fixtures.fn2str(source);
+
+  var ast = wasmAST.parse(source, options);
+  assert.deepEqual(ast.body[0].body, expected);
+}
+
 describe('Parser', function() {
   it('should parse basic function', function() {
     test(function() {/*
@@ -107,305 +114,211 @@ describe('Parser', function() {
   });
 
   it('should parse literal', function() {
-    test(function() {/*
+    testBody(function() {/*
       i64 mul() {
         return i64.const(1);
       }
-    */}, {
-      type: 'Program',
-      body: [
-        {
-          type: 'Function',
-          localCount: 0,
-          name: { type: 'Identifier', name: 'mul' },
-          params: [],
+    */}, [
+      {
+        type: 'ReturnStatement',
+        argument: {
+          type: 'Builtin',
           result: { type: 'Type', name: 'i64' },
-          body: [
-            {
-              type: 'ReturnStatement',
-              argument: {
-                type: 'Builtin',
-                result: { type: 'Type', name: 'i64' },
-                method: 'const',
-                arguments: [ {
-                  type: 'Literal',
-                  value: 1
-                } ]
-              }
-            }
-          ]
+          method: 'const',
+          arguments: [ {
+            type: 'Literal',
+            value: 1
+          } ]
         }
-      ]
-    });
+      }
+    ]);
   });
 
   it('should parse SequenceExpression', function() {
-    test(function() {/*
+    testBody(function() {/*
       i64 mul() {
         return (i64.const(1), i64.const(2), i64.const(3));
       }
-    */}, {
-      type: 'Program',
-      body: [
-        {
-          type: 'Function',
-          localCount: 0,
-          name: { type: 'Identifier', name: 'mul' },
-          params: [],
-          result: { type: 'Type', name: 'i64' },
-          body: [
+    */}, [
+      {
+        type: 'ReturnStatement',
+        argument: {
+          type: 'SequenceExpression',
+          expressions: [
             {
-              type: 'ReturnStatement',
-              argument: {
-                type: 'SequenceExpression',
-                expressions: [
-                  {
-                    type: 'Builtin',
-                    result: { type: 'Type', name: 'i64' },
-                    method: 'const',
-                    arguments: [ {
-                      type: 'Literal',
-                      value: 1
-                    } ]
-                  },
-                  {
-                    type: 'Builtin',
-                    result: { type: 'Type', name: 'i64' },
-                    method: 'const',
-                    arguments: [ {
-                      type: 'Literal',
-                      value: 2
-                    } ]
-                  },
-                  {
-                    type: 'Builtin',
-                    result: { type: 'Type', name: 'i64' },
-                    method: 'const',
-                    arguments: [ {
-                      type: 'Literal',
-                      value: 3
-                    } ]
-                  }
-                ]
-              }
+              type: 'Builtin',
+              result: { type: 'Type', name: 'i64' },
+              method: 'const',
+              arguments: [ {
+                type: 'Literal',
+                value: 1
+              } ]
+            },
+            {
+              type: 'Builtin',
+              result: { type: 'Type', name: 'i64' },
+              method: 'const',
+              arguments: [ {
+                type: 'Literal',
+                value: 2
+              } ]
+            },
+            {
+              type: 'Builtin',
+              result: { type: 'Type', name: 'i64' },
+              method: 'const',
+              arguments: [ {
+                type: 'Literal',
+                value: 3
+              } ]
             }
           ]
         }
-      ]
-    });
+      }
+    ]);
   });
 
   it('should parse VariableDeclaration', function() {
-    test(function() {/*
+    testBody(function() {/*
       void mul() {
         i64 a = i64.const(1);
         i64 b;
       }
-    */}, {
-      type: 'Program',
-      body: [
-        {
-          type: 'Function',
-          localCount: 0,
-          name: { type: 'Identifier', name: 'mul' },
-          params: [],
-          result: { type: 'Type', name: 'void' },
-          body: [
-            {
-              id: {
-                name: 'a',
-                type: 'Identifier'
-              },
-              result: {
-                type: 'Type',
-                name: 'i64'
-              },
-              init: {
-                type: 'Builtin',
-                result: { type: 'Type', name: 'i64' },
-                method: 'const',
-                arguments: [ {
-                  type: 'Literal',
-                  value: 1
-                } ]
-              },
-              type: 'VariableDeclaration'
-            },
-            {
-              id: {
-                name: 'b',
-                type: 'Identifier'
-              },
-              result: {
-                type: 'Type',
-                name: 'i64'
-              },
-              init: null,
-              type: 'VariableDeclaration'
-            }
-          ]
-        }
-      ]
-    });
+    */}, [
+      {
+        id: {
+          name: 'a',
+          type: 'Identifier'
+        },
+        result: {
+          type: 'Type',
+          name: 'i64'
+        },
+        init: {
+          type: 'Builtin',
+          result: { type: 'Type', name: 'i64' },
+          method: 'const',
+          arguments: [ {
+            type: 'Literal',
+            value: 1
+          } ]
+        },
+        type: 'VariableDeclaration'
+      },
+      {
+        id: {
+          name: 'b',
+          type: 'Identifier'
+        },
+        result: {
+          type: 'Type',
+          name: 'i64'
+        },
+        init: null,
+        type: 'VariableDeclaration'
+      }
+    ]);
   });
 
   it('should parse AssignmentExpression', function() {
-    test(function() {/*
+    testBody(function() {/*
       void mul() {
         a = b = c;
       }
-    */}, {
-      type: 'Program',
-      body: [
-        {
-          type: 'Function',
-          localCount: 0,
-          name: { type: 'Identifier', name: 'mul' },
-          params: [],
-          result: { type: 'Type', name: 'void' },
-          body: [
-            {
-              type: 'ExpressionStatement',
-              expression: {
-                type: 'AssignmentExpression',
-                operator: '=',
-                left: { type: 'Identifier', name: 'a' },
-                right: {
-                  type: 'AssignmentExpression',
-                  operator: '=',
-                  left: { type: 'Identifier', name: 'b' },
-                  right: { type: 'Identifier', name: 'c' }
-                }
-              }
-            }
-          ]
+    */}, [
+      {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'AssignmentExpression',
+          operator: '=',
+          left: { type: 'Identifier', name: 'a' },
+          right: {
+            type: 'AssignmentExpression',
+            operator: '=',
+            left: { type: 'Identifier', name: 'b' },
+            right: { type: 'Identifier', name: 'c' }
+          }
         }
-      ]
-    });
+      }
+    ]);
   });
 
   it('should parse empty ReturnStatement', function() {
-    test(function() {/*
+    testBody(function() {/*
       void mul() {
         return;
       }
-    */}, {
-      type: 'Program',
-      body: [
-        {
-          type: 'Function',
-          localCount: 0,
-          name: { type: 'Identifier', name: 'mul' },
-          params: [],
-          result: { type: 'Type', name: 'void' },
-          body: [
-            {
-              type: 'ReturnStatement',
-              argument: null
-            }
-          ]
-        }
-      ]
-    });
+    */}, [ {
+      type: 'ReturnStatement',
+      argument: null
+    } ]);
   });
 
   it('should parse IfStatement', function() {
-    test(function() {/*
+    testBody(function() {/*
       i64 mul(i64 a) {
         if (a) {
           return a;
         } else
           return i64.const(1);
       }
-    */}, {
-      type: 'Program',
-      body: [
-        {
-          type: 'Function',
-          localCount: 0,
-          name: { type: 'Identifier', name: 'mul' },
-          params: [ {
-            type: 'ParamDeclaration',
-            result: { type: 'Type', name: 'i64' },
-            name: { type: 'Identifier', name: 'a' }
-          } ],
+    */}, [ {
+      type: 'IfStatement',
+      test: { type: 'Identifier', name: 'a' },
+      consequent: {
+        type: 'BlockStatement',
+        body: [ {
+          type: 'ReturnStatement',
+          argument: { type: 'Identifier', name: 'a' }
+        } ]
+      },
+      alternate: {
+        type: 'ReturnStatement',
+        argument: {
+          type: 'Builtin',
           result: { type: 'Type', name: 'i64' },
-          body: [ {
-            type: 'IfStatement',
-            test: { type: 'Identifier', name: 'a' },
-            consequent: {
-              type: 'BlockStatement',
-              body: [ {
-                type: 'ReturnStatement',
-                argument: { type: 'Identifier', name: 'a' }
-              } ]
-            },
-            alternate: {
-              type: 'ReturnStatement',
-              argument: {
-                type: 'Builtin',
-                result: { type: 'Type', name: 'i64' },
-                method: 'const',
-                arguments: [ {
-                  type: 'Literal',
-                  value: 1
-                } ]
-              }
-            }
+          method: 'const',
+          arguments: [ {
+            type: 'Literal',
+            value: 1
           } ]
         }
-      ]
-    });
+      }
+    } ]);
   });
 
   it('should parse blockless IfStatement', function() {
-    test(function() {/*
+    testBody(function() {/*
       i64 mul(i64 a) {
         if (a)
           return a;
         else
           return i64.const(1);
       }
-    */}, {
-      type: 'Program',
-      body: [
-        {
-          type: 'Function',
-          localCount: 0,
-          name: { type: 'Identifier', name: 'mul' },
-          params: [ {
-            type: 'ParamDeclaration',
-            result: { type: 'Type', name: 'i64' },
-            name: { type: 'Identifier', name: 'a' }
-          } ],
+    */}, [ {
+      type: 'IfStatement',
+      test: { type: 'Identifier', name: 'a' },
+      consequent: {
+        type: 'ReturnStatement',
+        argument: { type: 'Identifier', name: 'a' }
+      },
+      alternate: {
+        type: 'ReturnStatement',
+        argument: {
+          type: 'Builtin',
           result: { type: 'Type', name: 'i64' },
-          body: [ {
-            type: 'IfStatement',
-            test: { type: 'Identifier', name: 'a' },
-            consequent: {
-              type: 'ReturnStatement',
-              argument: { type: 'Identifier', name: 'a' }
-            },
-            alternate: {
-              type: 'ReturnStatement',
-              argument: {
-                type: 'Builtin',
-                result: { type: 'Type', name: 'i64' },
-                method: 'const',
-                arguments: [ {
-                  type: 'Literal',
-                  value: 1
-                } ]
-              }
-            }
+          method: 'const',
+          arguments: [ {
+            type: 'Literal',
+            value: 1
           } ]
         }
-      ]
-    });
+      }
+    } ]);
   });
 
   it('should parse forever loop', function() {
-    test(function() {/*
+    testBody(function() {/*
       i64 mul() {
         i64 t = i64.const(1);
         forever {
@@ -415,113 +328,101 @@ describe('Parser', function() {
         // Not going to happen
         return t;
       }
-    */}, {
-      type: 'Program',
-      body: [
-        {
-          type: 'Function',
-          localCount: 0,
-          name: { type: 'Identifier', name: 'mul' },
-          params: [ ],
+    */}, [
+      {
+        type: 'VariableDeclaration',
+        id: {
+          name: 't',
+          type: 'Identifier'
+        },
+        result: {
+          type: 'Type',
+          name: 'i64'
+        },
+        init: {
+          type: 'Builtin',
           result: { type: 'Type', name: 'i64' },
+          method: 'const',
+          arguments: [ {
+            type: 'Literal',
+            value: 1
+          } ]
+        }
+      },
+      {
+        type: 'ForeverStatement',
+        body: {
+          type: 'BlockStatement',
           body: [
             {
-              type: 'VariableDeclaration',
-              id: {
-                name: 't',
-                type: 'Identifier'
-              },
-              result: {
-                type: 'Type',
-                name: 'i64'
-              },
-              init: {
-                type: 'Builtin',
-                result: { type: 'Type', name: 'i64' },
-                method: 'const',
-                arguments: [ {
-                  type: 'Literal',
-                  value: 1
-                } ]
+              type: 'ExpressionStatement',
+              expression: {
+                type: 'AssignmentExpression',
+                operator: '=',
+                left: { type: 'Identifier', name: 't' },
+                right: {
+                  type: 'Builtin',
+                  result: { type: 'Type', name: 'i64' },
+                  method: 'add',
+                  arguments: [ {
+                    type: 'Identifier', name: 't'
+                  }, {
+                    type: 'Identifier', name: 't'
+                  } ]
+                }
               }
-            },
-            {
-              type: 'ForeverStatement',
-              body: {
-                type: 'BlockStatement',
-                body: [
-                  {
-                    type: 'ExpressionStatement',
-                    expression: {
-                      type: 'AssignmentExpression',
-                      operator: '=',
-                      left: { type: 'Identifier', name: 't' },
-                      right: {
-                        type: 'Builtin',
-                        result: { type: 'Type', name: 'i64' },
-                        method: 'add',
-                        arguments: [ {
-                          type: 'Identifier', name: 't'
-                        }, {
-                          type: 'Identifier', name: 't'
-                        } ]
-                      }
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              type: 'ReturnStatement',
-              argument: { type: 'Identifier', name: 't' }
             }
           ]
         }
-      ]
-    });
+      },
+      {
+        type: 'ReturnStatement',
+        argument: { type: 'Identifier', name: 't' }
+      }
+    ]);
   });
 
   it('should parse forever loop with break/continue', function() {
-    test(function() {/*
+    testBody(function() {/*
       void mul() {
         forever {
           continue;
           break;
         }
       }
-    */}, {
-      type: 'Program',
-      body: [
-        {
-          type: 'Function',
-          result: {
-            type: 'Type',
-            name: 'void'
-          },
-          name: {
-            type: 'Identifier',
-            name: 'mul'
-          },
-          params: [],
+    */}, [
+      {
+        type: 'ForeverStatement',
+        body: {
+          type: 'BlockStatement',
           body: [
             {
-              type: 'ForeverStatement',
-              body: {
-                type: 'BlockStatement',
-                body: [
-                  {
-                    type: 'ContinueStatement'
-                  },
-                  {
-                    type: 'BreakStatement'
-                  }
-                ]
-              }
+              type: 'ContinueStatement'
+            },
+            {
+              type: 'BreakStatement'
             }
-          ],
-          localCount: 0
+          ]
         }
-      ]
-    });
+      }
+    ]);
+  });
+
+  it('should parse do_while loop', function() {
+    testBody(function() {/*
+      void mul(i64 a) {
+        do {
+        } while (a);
+      }
+    */}, [
+      {
+        type: 'DoWhileStatement',
+        body: {
+          type: 'BlockStatement',
+          body: [ ]
+        },
+        test: { type: 'Identifier', name: 'a' }
+      }
+    ]);
   });
 });
