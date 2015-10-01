@@ -128,7 +128,7 @@ describe('Parser', function() {
           method: 'const',
           arguments: [ {
             type: 'Literal',
-            value: 1
+            value: new BN(1)
           } ]
         }
       }
@@ -173,7 +173,7 @@ describe('Parser', function() {
               method: 'const',
               arguments: [ {
                 type: 'Literal',
-                value: 1
+                value: new BN(1)
               } ]
             },
             {
@@ -182,7 +182,7 @@ describe('Parser', function() {
               method: 'const',
               arguments: [ {
                 type: 'Literal',
-                value: 2
+                value: new BN(2)
               } ]
             },
             {
@@ -191,7 +191,7 @@ describe('Parser', function() {
               method: 'const',
               arguments: [ {
                 type: 'Literal',
-                value: 3
+                value: new BN(3)
               } ]
             }
           ]
@@ -222,7 +222,7 @@ describe('Parser', function() {
           method: 'const',
           arguments: [ {
             type: 'Literal',
-            value: 1
+            value: new BN(1)
           } ]
         },
         type: 'VariableDeclaration'
@@ -302,7 +302,7 @@ describe('Parser', function() {
           method: 'const',
           arguments: [ {
             type: 'Literal',
-            value: 1
+            value: new BN(1)
           } ]
         }
       }
@@ -332,7 +332,7 @@ describe('Parser', function() {
           method: 'const',
           arguments: [ {
             type: 'Literal',
-            value: 1
+            value: new BN(1)
           } ]
         }
       }
@@ -367,7 +367,7 @@ describe('Parser', function() {
           method: 'const',
           arguments: [ {
             type: 'Literal',
-            value: 1
+            value: new BN(1)
           } ]
         }
       },
