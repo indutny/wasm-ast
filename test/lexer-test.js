@@ -130,6 +130,10 @@ describe('Lexer', function() {
       test('1.', [ { type: 'Literal', value: '1.' } ]);
     });
 
+    it('should handle 0xdeadBEEF', function() {
+      test('0xdeadBEEF', [ { type: 'Literal', value: '0xdeadBEEF' } ]);
+    });
+
     it('should handle 123.456', function() {
       test('123.456', [ { type: 'Literal', value: '123.456' } ]);
     });

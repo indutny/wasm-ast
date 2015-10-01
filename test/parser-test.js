@@ -1,6 +1,7 @@
 'use strict';
 
 var assert = require('assert');
+var BN = require('bn.js');
 var fixtures = require('./fixtures');
 
 var wasmAST = require('../');
@@ -128,6 +129,27 @@ describe('Parser', function() {
           arguments: [ {
             type: 'Literal',
             value: 1
+          } ]
+        }
+      }
+    ]);
+  });
+
+  it('should parse 64bit literal', function() {
+    testBody(function() {/*
+      i64 mul() {
+        return i64.const(0xdeadbeefABBADEAD);
+      }
+    */}, [
+      {
+        type: 'ReturnStatement',
+        argument: {
+          type: 'Builtin',
+          result: { type: 'Type', name: 'i64' },
+          method: 'const',
+          arguments: [ {
+            type: 'Literal',
+            value: new BN('deadbeefabbadead', 16)
           } ]
         }
       }
