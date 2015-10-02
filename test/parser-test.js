@@ -447,4 +447,22 @@ describe('Parser', function() {
       }
     ]);
   });
+
+  it('should builtin statement', function() {
+    testBody(function() {/*
+      void mul(i64 a) {
+        addr.page_size();
+      }
+    */}, [
+      {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'Builtin',
+          result: { type: 'Type', name: 'addr' },
+          method: 'page_size',
+          arguments: []
+        }
+      }
+    ]);
+  });
 });
