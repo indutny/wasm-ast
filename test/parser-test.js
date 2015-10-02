@@ -80,22 +80,22 @@ describe('Parser', function() {
         {
           type: 'Function',
           localCount: 0,
-          name: { type: 'FunctionRef', index: 0 },
+          name: { type: 'FunctionRef', name: 'second', index: 0 },
           params: [
             {
               type: 'ParamDeclaration',
               result: { type: 'Type', name: 'i32' },
-              name: { type: 'Param', index: 0 }
+              name: { type: 'Param', name: 'a', index: 0 }
             },
             {
               type: 'ParamDeclaration',
               result: { type: 'Type', name: 'i32' },
-              name: { type: 'Param', index: 1 }
+              name: { type: 'Param', name: 'b', index: 1 }
             },
             {
               type: 'ParamDeclaration',
               result: { type: 'Type', name: 'i32' },
-              name: { type: 'Param', index: 2 }
+              name: { type: 'Param', name: 'c', index: 2 }
             }
           ],
           result: { type: 'Type', name: 'i64' },
@@ -103,7 +103,7 @@ describe('Parser', function() {
             {
               type: 'ReturnStatement',
               argument: {
-                type: 'Param', index: 1
+                type: 'Param', name: 'b', index: 1
               }
             }
           ]
@@ -478,8 +478,8 @@ describe('Parser', function() {
         type: 'ExpressionStatement',
         expression: {
           type: 'CallExpression',
-          fn: { type: 'FunctionRef', index: 1 },
-          arguments: [ { type: 'Param', index: 0 } ]
+          fn: { type: 'FunctionRef', name: 'test', index: 1 },
+          arguments: [ { type: 'Param', name: 'a', index: 0 } ]
         }
       }
     ], {
