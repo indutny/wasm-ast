@@ -448,7 +448,7 @@ describe('Parser', function() {
     ]);
   });
 
-  it('should builtin statement', function() {
+  it('should parser builtin statement', function() {
     testBody(function() {/*
       void mul(i64 a) {
         addr.page_size();
@@ -464,5 +464,26 @@ describe('Parser', function() {
         }
       }
     ]);
+  });
+
+  it('should parse call statement', function() {
+    testBody(function() {/*
+      void mul(i64 a) {
+        test(a);
+      }
+      void test(i64 a) {
+      }
+    */}, [
+      {
+        type: 'ExpressionStatement',
+        expression: {
+          type: 'CallExpression',
+          fn: { type: 'FunctionRef', index: 1 },
+          arguments: [ { type: 'Param', index: 0 } ]
+        }
+      }
+    ], {
+      index: true
+    });
   });
 });
