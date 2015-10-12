@@ -1,6 +1,6 @@
 {
   "name": "wasm-ast",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "WebAssembly AST parser",
   "main": "lib/ast.js",
   "scripts": {
