@@ -478,7 +478,6 @@ describe('Parser', function() {
         type: 'ExpressionStatement',
         expression: {
           type: 'CallExpression',
-          module: null,
           fn: { type: 'FunctionRef', name: 'test', index: 1 },
           arguments: [ { type: 'Param', name: 'a', index: 0 } ]
         }
@@ -493,9 +492,11 @@ describe('Parser', function() {
       import resize_memory, log from std
 
       void mul(i32 a, i32 b) {
+        resize_memory(a);
       }
 
       void div(i32 a, i32 b) {
+        std::assert(a);
       }
 
       export mul, div
@@ -505,8 +506,8 @@ describe('Parser', function() {
         {
           type: 'ImportStatement',
           names: [
-            { type: 'Identifier', name: 'resize_memory' },
-            { type: 'Identifier', name: 'log' }
+            { type: 'External', module: 'std', name: 'resize_memory' },
+            { type: 'External', module: 'std', name: 'log' }
           ],
           module: { type: 'Identifier', name: 'std' }
         },
@@ -526,7 +527,14 @@ describe('Parser', function() {
               name: { type: 'Identifier', name: 'b' }
             }
           ],
-          body: [],
+          body: [ {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'CallExpression',
+              fn: { type: 'External', module: 'std', name: 'resize_memory' },
+              arguments: [ { type: 'Identifier', name: 'a' } ]
+            }
+          } ],
           localCount: 0
         },
         {
@@ -545,7 +553,14 @@ describe('Parser', function() {
               name: { type: 'Identifier', name: 'b' }
             }
           ],
-          body: [],
+          body: [ {
+            type: 'ExpressionStatement',
+            expression: {
+              type: 'CallExpression',
+              fn: { type: 'External', module: 'std', name: 'assert' },
+              arguments: [ { type: 'Identifier', name: 'a' } ]
+            }
+          } ],
           localCount: 0
         },
         {
