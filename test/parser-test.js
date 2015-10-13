@@ -487,4 +487,75 @@ describe('Parser', function() {
       index: true
     });
   });
+
+  it('should parse export/import', function() {
+    test(function() {/*
+      import resize_memory, log from std
+
+      void mul(i32 a, i32 b) {
+      }
+
+      void div(i32 a, i32 b) {
+      }
+
+      export mul, div
+    */}, {
+      type: 'Program',
+      body: [
+        {
+          type: 'ImportStatement',
+          names: [
+            { type: 'Identifier', name: 'resize_memory' },
+            { type: 'Identifier', name: 'log' }
+          ],
+          module: { type: 'Identifier', name: 'std' }
+        },
+        {
+          type: 'Function',
+          result: { type: 'Type', name: 'void' },
+          name: { type: 'Identifier', name: 'mul' },
+          params: [
+            {
+              type: 'ParamDeclaration',
+              result: { type: 'Type', name: 'i32' },
+              name: { type: 'Identifier', name: 'a' }
+            },
+            {
+              type: 'ParamDeclaration',
+              result: { type: 'Type', name: 'i32' },
+              name: { type: 'Identifier', name: 'b' }
+            }
+          ],
+          body: [],
+          localCount: 0
+        },
+        {
+          type: 'Function',
+          result: { type: 'Type', name: 'void' },
+          name: { type: 'Identifier', name: 'div' },
+          params: [
+            {
+              type: 'ParamDeclaration',
+              result: { type: 'Type', name: 'i32' },
+              name: { type: 'Identifier', name: 'a' }
+            },
+            {
+              type: 'ParamDeclaration',
+              result: { type: 'Type', name: 'i32' },
+              name: { type: 'Identifier', name: 'b' }
+            }
+          ],
+          body: [],
+          localCount: 0
+        },
+        {
+          type: 'ExportStatement',
+          names: [
+            { type: 'Identifier', name: 'mul' },
+            { type: 'Identifier', name: 'div' }
+          ]
+        }
+      ]
+    });
+  });
 });
